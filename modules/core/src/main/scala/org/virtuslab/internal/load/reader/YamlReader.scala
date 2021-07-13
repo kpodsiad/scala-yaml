@@ -34,6 +34,12 @@ class YamlReader(in: CharSequence) extends Reader {
       case Some(']') =>
         skipCharacter()
         ctx.popTokenFromStack
+      case Some('{') =>
+        read()
+        ctx.appendMapping(indent)
+      case Some('}') =>
+        read()
+        ctx.popTokenFromStack
       case Some(_) => fetchValue()
       case None    => ctx.popTokenFromStack
 
@@ -44,7 +50,7 @@ class YamlReader(in: CharSequence) extends Reader {
     def readScalar(): String =
       peek() match
         case Some(':') if peekNext() == Some(' ') || peekNext() == Some('\n') => sb.result()
-        case Some('\n') | Some('#') | Some(']') | None                        => sb.result()
+        case Some('\n') | Some('#') | Some(']') | Some('}') | None            => sb.result()
         case Some(',') =>
           skipCharacter()
           sb.result()
@@ -87,11 +93,20 @@ class YamlReader(in: CharSequence) extends Reader {
   def skipCharacter(): Unit =
     read()
 
+  def skipComment(): Unit = {
+    while (peek() != Some('\n')) {
+      read()
+    }
+    read()
+  }
+
   def skipUntilNextToken(): Unit =
     while (peek() == Some(' ')) {
       indent += 1
       skipCharacter()
     }
+
+    if (peek() == Some('#')) skipComment()
 
     if peek() == Some('\n') then {
       skipCharacter()

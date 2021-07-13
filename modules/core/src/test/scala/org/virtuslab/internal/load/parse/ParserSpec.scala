@@ -236,6 +236,64 @@ class ParserSpec extends munit.FunSuite {
     expect(events == expectedEvents)
   }
 
+  test("should parse mapping with comments") {
+    val yaml =
+      s"""|spec:
+         |  # comment or delete
+         |  type: NodePort
+         |  # if your cluster supports it, uncomment the following to automatically create
+         |  # an external load-balanced IP for the frontend service.
+         |  # type: LoadBalancer
+         |""".stripMargin
+
+    val reader = YamlReader(yaml)
+    val events = ParserImpl.getEvents(reader)
+
+    val expectedEvents = Right(
+      List(
+        StreamStart,
+        DocumentStart,
+        MappingStart,
+        Scalar("spec"),
+        MappingStart,
+        Scalar("type"),
+        Scalar("NodePort"),
+        MappingEnd,
+        MappingEnd,
+        DocumentEnd,
+        StreamEnd
+      )
+    )
+    expect(events == expectedEvents)
+  }
+
+  test("should parse mapping of mapping with {") {
+    val yaml = "config: {{config_data}}"
+
+    val reader = YamlReader(yaml)
+    val events = ParserImpl.getEvents(reader)
+
+    val expectedEvents = Right(
+      List(
+        StreamStart,
+        DocumentStart,
+        MappingStart,
+        Scalar("config"),
+        MappingStart,
+        MappingStart,
+        Scalar("config_data"),
+        Scalar(""),
+        MappingEnd,
+        Scalar(""),
+        MappingEnd,
+        MappingEnd,
+        DocumentEnd,
+        StreamEnd
+      )
+    )
+    expect(events == expectedEvents)
+  }
+
   test("should parse mapping of sequence") {
     val yaml = s"""
                   |spec:

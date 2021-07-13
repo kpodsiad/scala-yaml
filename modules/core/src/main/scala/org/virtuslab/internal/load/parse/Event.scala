@@ -19,7 +19,6 @@ object Event:
   case object DocumentEnd   extends Document
 
   sealed trait Node                extends Event
-  case object Alias                extends Node
   case class Scalar(value: String) extends Node
 
   sealed trait Sequence     extends Node
