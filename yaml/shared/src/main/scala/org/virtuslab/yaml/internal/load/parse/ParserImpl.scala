@@ -18,7 +18,7 @@ private enum Production:
   case ParseDocumentEnd
   case ParseDocumentStartOpt
 
-  case ParseNode(indentLess: Boolean = false)
+  case ParseNode(indentLess: Boolean)
   case ParseScalar
 
   case ParseMappingStart
@@ -110,10 +110,10 @@ final class ParserImpl private (in: Tokenizer) extends Parser:
     def parseDocumentStart() = token.kind match
       case TokenKind.DocumentStart =>
         in.popToken()
-        productions.prependAll(ParseNode() :: ParseDocumentEnd :: Nil)
+        productions.prependAll(ParseNode(true) :: ParseDocumentEnd :: Nil)
         Right(Event.DocumentStart(Some(pos), explicit = true))
       case _ =>
-        productions.prependAll(ParseNode() :: ParseDocumentEnd :: Nil)
+        productions.prependAll(ParseNode(true) :: ParseDocumentEnd :: Nil)
         Right(Event.DocumentStart(Some(token.pos), explicit = false))
 
     def parseDocumentStartOpt() = token.kind match
@@ -174,6 +174,7 @@ final class ParserImpl private (in: Tokenizer) extends Parser:
         productions.prependAll(ParseSequenceEntry :: ParseSequenceEnd(indentLess) :: Nil)
         Right(Event.SequenceStart(Some(pos)))
       case TokenKind.SequenceValue if indentLess =>
+        productions.prependAll(ParseSequenceEntry :: ParseSequenceEnd(indentLess) :: Nil)
         Right(Event.SequenceStart(Some(pos)))
       case _ =>
         Left(ParseError.from(TokenKind.SequenceStart, token))
@@ -190,7 +191,7 @@ final class ParserImpl private (in: Tokenizer) extends Parser:
     def parseSequenceEntry() = token.kind match
       case TokenKind.SequenceValue =>
         in.popToken()
-        productions.prependAll(ParseNode() :: ParseSequenceEntryOpt :: Nil)
+        productions.prependAll(ParseNode(false) :: ParseSequenceEntryOpt :: Nil)
         getNextEvent()
       case _ => Left(ParseError.from(TokenKind.SequenceValue, token))
 
