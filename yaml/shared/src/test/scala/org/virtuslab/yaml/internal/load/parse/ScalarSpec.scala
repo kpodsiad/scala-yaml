@@ -94,7 +94,7 @@ class ScalarSpec extends BaseParseSuite:
       DocumentEnd(),
       StreamEnd
     )
-
+    println(yaml.tokens)
     assertEventsEquals(yaml.events, expectedEvents)
   }
 

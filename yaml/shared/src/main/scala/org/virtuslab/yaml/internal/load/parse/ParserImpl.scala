@@ -89,6 +89,7 @@ final class ParserImpl private (in: Tokenizer) extends Parser:
     def loop(events: mutable.ArrayDeque[Event]): Either[YamlError, List[Event]] = {
       getNextEvent() match
         case Right(event) =>
+          println(event.getClass.getSimpleName)
           if event != Event.StreamEnd then loop(events.append(event))
           else Right(events.append(event).toList)
         case Left(err) => Left(err)
@@ -165,6 +166,7 @@ final class ParserImpl private (in: Tokenizer) extends Parser:
         productions.prependAll(ParseMappingEntry :: Nil)
         getNextEvent()
       case _ =>
+        val x = productions.toList.toArray
         getNextEvent()
 
     def parseSequenceStart(indentLess: Boolean) = token.kind match
