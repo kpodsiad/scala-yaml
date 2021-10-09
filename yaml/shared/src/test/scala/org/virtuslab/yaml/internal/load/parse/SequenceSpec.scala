@@ -56,13 +56,13 @@ class SequenceSpec extends BaseParseSuite:
   }
 
   test("sequence-of-mappings") {
-    val yaml = s"""-
-                    |  name: Mark McGwire
-                    |  hr:   65
-                    |-
-                    |  name: Sammy Sosa
-                    |  hr:   63
-                    |""".stripMargin
+    val yaml = s"""|-
+                   |  name: Mark McGwire
+                   |  hr:   65
+                   |-
+                   |  name: Sammy Sosa
+                   |  hr:   63
+                   |""".stripMargin
 
     val expectedEvents = List(
       Event.StreamStart,
@@ -84,7 +84,6 @@ class SequenceSpec extends BaseParseSuite:
       Event.DocumentEnd(),
       Event.StreamEnd
     )
-
     assertEventsEquals(yaml.events, expectedEvents)
   }
 

@@ -162,7 +162,6 @@ final class ParserImpl private (in: Tokenizer) extends Parser:
 
     def parseMappingEntryOpt() = token.kind match
       case TokenKind.MappingKey =>
-        in.popToken()
         productions.prependAll(ParseMappingEntry :: Nil)
         getNextEvent()
       case _ =>
@@ -180,7 +179,7 @@ final class ParserImpl private (in: Tokenizer) extends Parser:
         Left(ParseError.from(TokenKind.SequenceStart, token))
 
     def parseSequenceEnd(indentLess: Boolean) = token.kind match
-      case TokenKind.BlockEnd =>
+      case TokenKind.BlockEnd if !indentLess =>
         in.popToken()
         Right(Event.SequenceEnd(Some(pos)))
       case _ if indentLess =>
