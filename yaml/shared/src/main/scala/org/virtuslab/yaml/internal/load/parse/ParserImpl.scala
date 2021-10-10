@@ -89,7 +89,6 @@ final class ParserImpl private (in: Tokenizer) extends Parser:
     def loop(events: mutable.ArrayDeque[Event]): Either[YamlError, List[Event]] = {
       getNextEvent() match
         case Right(event) =>
-          println(event.getClass.getSimpleName)
           if event != Event.StreamEnd then loop(events.append(event))
           else Right(events.append(event).toList)
         case Left(err) => Left(err)

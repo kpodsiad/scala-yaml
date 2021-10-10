@@ -84,8 +84,8 @@ private[yaml] class Scanner(str: String) extends Tokenizer {
 
   private def parseBlockSequence() =
     val isIn = ctx.isInFlowCollection
-    val i = ctx.indent
-    val col = in.column
+    val i    = ctx.indent
+    val col  = in.column
     if (!ctx.isInFlowCollection && ctx.indent < in.column) then
       ctx.addIndent(in.column)
       Token(SequenceStart, in.pos)
@@ -281,7 +281,7 @@ private[yaml] class Scanner(str: String) extends Tokenizer {
     peeked2 match
       case Some(':') =>
         in.skipCharacter()
-        if (ctx.indent < scalar.pos.column) then 
+        if (ctx.indent < scalar.pos.column) then
           ctx.addIndent(scalar.pos.column)
           ctx.tokens.appendAll(List(Token(MappingStart, scalar.pos)))
 
