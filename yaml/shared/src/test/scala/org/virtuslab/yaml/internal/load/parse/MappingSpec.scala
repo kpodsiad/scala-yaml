@@ -260,10 +260,9 @@ class MappingSpec extends BaseParseSuite:
     assertEventsEquals(yaml.events, expectedEvents)
   }
 
-  test("mapping-with-flow-mapping-as-value".ignore) {
+  test("mapping-with-flow-mapping-as-value") {
     val yaml =
-      s"""doubles: { double1: 1.0 }
-         |""".stripMargin
+      s"""doubles: { double1: 1.0 }""".stripMargin
 
     val events = List(
       StreamStart,
@@ -279,5 +278,5 @@ class MappingSpec extends BaseParseSuite:
       StreamEnd
     )
 
-    assertEquals(yaml.events, Right(events))
+    assertEventsEquals(yaml.events, events)
   }

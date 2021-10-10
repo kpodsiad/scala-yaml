@@ -246,7 +246,6 @@ private[yaml] class Scanner(str: String) extends Tokenizer {
     val scalarIndent = in.column
 
     def readScalar(): String =
-      // val xxx = in.peek().get
       val peeked = in.peek()
       peeked match
         case Some(':') if in.isNextWhitespace                   => sb.result()
