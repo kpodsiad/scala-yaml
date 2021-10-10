@@ -285,7 +285,7 @@ final class ParserImpl private (in: Tokenizer) extends Parser:
       case ParseSequenceEntryOpt          => parseSequenceEntryOpt()
 
       case ParseFlowMappingStart => parseFlowMappingStart()
-      case ParseFlowMappingEnd   => parseMappingEnd()
+      case ParseFlowMappingEnd   => parseFlowMappingEnd()
 
       case ParseFlowSequenceStart    => parseFlowSequenceStart()
       case ParseFlowSequenceEnd      => parseFlowSequenceEnd()

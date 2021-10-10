@@ -270,9 +270,9 @@ class MappingSpec extends BaseParseSuite:
       MappingStart(),
       Scalar("doubles"),
       FlowMappingStart(),
-      MappingStart(),
       Scalar("double1"),
       Scalar("1.0"),
+      FlowMappingEnd(),
       MappingEnd(),
       DocumentEnd(),
       StreamEnd
